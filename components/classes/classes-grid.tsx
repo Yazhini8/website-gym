@@ -14,6 +14,18 @@ export function ClassesGrid() {
 
   const filteredClasses = activeCategory === "all" ? classes : classes.filter((c) => c.category === activeCategory)
 
+  const handleBookClass = (classItem) => {
+    const message = `
+      Hi, I would like to book the following class:
+      *Class:* ${classItem.name}
+      *Trainer:* ${classItem.trainer}
+      *Time:* ${classItem.timing}
+      *Duration:* ${classItem.duration}
+    `;
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=9342381217&text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   return (
     <section className="py-12 bg-background">
       <div className="container mx-auto px-4">
@@ -71,7 +83,12 @@ export function ClassesGrid() {
                     <span>Duration: {classItem.duration}</span>
                   </div>
                 </div>
-                <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">Book Class</Button>
+                <Button 
+                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                  onClick={() => handleBookClass(classItem)}
+                >
+                  Book Class
+                </Button>
               </CardContent>
             </Card>
           ))}

@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import type React from "react"
 
@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Dumbbell, Mail, Lock, Loader2 } from "lucide-react"
+import { Dumbbell, Mail, Lock, Loader2, X } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 
 export function LoginForm() {
@@ -52,8 +52,17 @@ export function LoginForm() {
   }
 
   return (
-    <Card className="w-full max-w-md bg-card border-border">
-      <CardHeader className="text-center pb-0">
+    <Card className="w-full max-w-md bg-card border-border relative">
+      <Link href="/" passHref>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
+        >
+          <X className="w-5 h-5" />
+        </Button>
+      </Link>
+      <CardHeader className="text-center pb-0 pt-12">
         <div className="flex justify-center mb-4">
           <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center">
             <Dumbbell className="w-8 h-8 text-primary-foreground" />

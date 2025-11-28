@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 import {
@@ -9,7 +9,6 @@ import {
   signOut,
   signInWithPopup,
   GoogleAuthProvider,
-  updateProfile,
 } from "firebase/auth"
 import { doc, setDoc, getDoc } from "firebase/firestore"
 import { auth, db } from "./firebase"
@@ -66,7 +65,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = async (email: string, password: string, name: string) => {
     const { user } = await createUserWithEmailAndPassword(auth, email, password)
-    await updateProfile(user, { displayName: name })
 
     // Create user document in Firestore
     const userData: UserData = {
@@ -75,7 +73,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       displayName: name,
       photoURL: null,
       role: "user",
-      membership: "none",
       bookedClasses: [],
       createdAt: new Date(),
     }
@@ -96,7 +93,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         displayName: user.displayName,
         photoURL: user.photoURL,
         role: "user",
-        membership: "none",
         bookedClasses: [],
         createdAt: new Date(),
       }

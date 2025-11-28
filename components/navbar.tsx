@@ -29,7 +29,7 @@ export function Navbar() {
 
   const initials = (userData?.displayName || user?.displayName || "U")
     .split(" ")
-    .map((n) => n[0])
+    .map((n: string) => n[0])
     .join("")
     .toUpperCase()
 

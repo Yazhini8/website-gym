@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import type React from "react"
 
@@ -9,8 +9,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Dumbbell, Mail, Lock, User, Loader2 } from "lucide-react"
+import { Dumbbell, Mail, Lock, User, Loader2, X } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 
 export function SignUpForm() {
@@ -18,7 +17,6 @@ export function SignUpForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
-  const [agreeTerms, setAgreeTerms] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const { signUp, signInWithGoogle } = useAuth()
@@ -33,20 +31,15 @@ export function SignUpForm() {
       return
     }
 
-    if (!agreeTerms) {
-      setError("Please agree to the terms and conditions")
-      return
-    }
-
     setLoading(true)
 
     try {
       await signUp(email, password, name)
+      setLoading(false)
       router.push("/dashboard")
     } catch (err: unknown) {
       const error = err as { message?: string }
       setError(error.message || "Failed to create account")
-    } finally {
       setLoading(false)
     }
   }
@@ -57,18 +50,27 @@ export function SignUpForm() {
 
     try {
       await signInWithGoogle()
+      setLoading(false)
       router.push("/dashboard")
     } catch (err: unknown) {
       const error = err as { message?: string }
       setError(error.message || "Failed to sign in with Google")
-    } finally {
       setLoading(false)
     }
   }
 
   return (
-    <Card className="w-full max-w-md bg-card border-border">
-      <CardHeader className="text-center pb-0">
+    <Card className="w-full max-w-md bg-card border-border relative">
+      <Link href="/" passHref>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
+        >
+          <X className="w-5 h-5" />
+        </Button>
+      </Link>
+      <CardHeader className="text-center pb-0 pt-12">
         <div className="flex justify-center mb-4">
           <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center">
             <Dumbbell className="w-8 h-8 text-primary-foreground" />
@@ -153,24 +155,6 @@ export function SignUpForm() {
                 required
               />
             </div>
-          </div>
-          <div className="flex items-start gap-2">
-            <Checkbox
-              id="terms"
-              checked={agreeTerms}
-              onCheckedChange={(checked) => setAgreeTerms(checked as boolean)}
-              className="mt-1"
-            />
-            <Label htmlFor="terms" className="text-sm text-muted-foreground font-normal cursor-pointer">
-              I agree to the{" "}
-              <Link href="#" className="text-primary hover:underline">
-                Terms of Service
-              </Link>{" "}
-              and{" "}
-              <Link href="#" className="text-primary hover:underline">
-                Privacy Policy
-              </Link>
-            </Label>
           </div>
           <Button
             type="submit"

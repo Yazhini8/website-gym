@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
@@ -20,10 +20,12 @@ export default function DashboardPage() {
     if (!loading) {
       if (!user) {
         router.push("/auth/login")
-      } else if (userData?.role === "admin") {
-        router.push("/admin")
-      } else {
-        setIsChecking(false)
+      } else if (userData) {
+        if (userData.role === "admin") {
+          router.push("/admin")
+        } else {
+          setIsChecking(false)
+        }
       }
     }
   }, [user, userData, loading, router])
