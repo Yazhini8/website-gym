@@ -16,7 +16,7 @@ import { auth, db } from "./firebase"
 interface UserData {
   uid: string
   email: string | null
-  displayName: string | null
+  displayName?: string | null
   photoURL: string | null
   role: "user" | "admin"
   membership?: string
@@ -78,7 +78,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       createdAt: new Date(),
     }
     await setDoc(doc(db, "users", user.uid), userData)
-    setUserData(userData)
   }
 
   const signInWithGoogle = async () => {
@@ -98,16 +97,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         createdAt: new Date(),
       }
       await setDoc(doc(db, "users", user.uid), userData)
-      setUserData(userData)
-    } else {
-      setUserData(userDoc.data() as UserData)
-    }
+    } 
   }
 
   const logout = async () => {
     await signOut(auth)
-    setUser(null)
-    setUserData(null)
   }
 
   const getAllUsers = async () => {

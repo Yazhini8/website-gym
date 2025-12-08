@@ -1,3 +1,4 @@
+
 'use client'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -11,13 +12,6 @@ export function AdminTabs() {
   return (
     <Tabs defaultValue="trainers" className="w-full">
       <TabsList className="grid w-full grid-cols-4 bg-card border border-border mb-8">
-        <TabsTrigger
-          value="users"
-          className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-        >
-          <User className="w-4 h-4" />
-          <span className="hidden sm:inline">Users</span>
-        </TabsTrigger>
         <TabsTrigger
           value="trainers"
           className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
@@ -39,22 +33,25 @@ export function AdminTabs() {
           <CreditCard className="w-4 h-4" />
           <span className="hidden sm:inline">Pricing</span>
         </TabsTrigger>
+        <TabsTrigger
+          value="users"
+          className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+        >
+          <User className="w-4 h-4" />
+          <span className="hidden sm:inline">Users</span>
+        </TabsTrigger>
       </TabsList>
-
-      <TabsContent value="users">
-        <UsersManager />
-      </TabsContent>
-
       <TabsContent value="trainers">
         <TrainersManager />
       </TabsContent>
-
       <TabsContent value="classes">
         <ClassesManager />
       </TabsContent>
-
       <TabsContent value="pricing">
         <PricingManager />
+      </TabsContent>
+      <TabsContent value="users">
+        <UsersManager />
       </TabsContent>
     </Tabs>
   )

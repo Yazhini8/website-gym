@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -25,7 +25,12 @@ const navLinks = [
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
   const { user, userData, loading, logout } = useAuth()
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const initials = (userData?.displayName || user?.displayName || "U")
     .split(" ")
@@ -65,68 +70,70 @@ export function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-4">
-          {loading ? (
-            <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
-          ) : user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={userData?.photoURL || user?.photoURL || ""} />
-                    <AvatarFallback className="bg-primary text-primary-foreground">{initials}</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 bg-card border-border" align="end">
-                <div className="flex items-center gap-2 p-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={userData?.photoURL || user?.photoURL || ""} />
-                    <AvatarFallback className="bg-primary text-primary-foreground text-xs">{initials}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col">
-                    <p className="text-sm font-medium text-foreground truncate">
-                      {userData?.displayName || user?.displayName || "Member"}
-                    </p>
-                    <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+          {isMounted && !loading ? (
+            user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={userData?.photoURL || user?.photoURL || ""} />
+                      <AvatarFallback className="bg-primary text-primary-foreground">{initials}</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 bg-card border-border" align="end">
+                  <div className="flex items-center gap-2 p-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={userData?.photoURL || user?.photoURL || ""} />
+                      <AvatarFallback className="bg-primary text-primary-foreground text-xs">{initials}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <p className="text-sm font-medium text-foreground truncate">
+                        {userData?.displayName || user?.displayName || "Member"}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                    </div>
                   </div>
-                </div>
-                <DropdownMenuSeparator className="bg-border" />
-                <DropdownMenuItem asChild>
-                  <Link href={dashboardLink} className="flex items-center gap-2 cursor-pointer">
-                    {isAdmin ? (
-                      <>
-                        <ShieldCheck className="w-4 h-4" />
-                        Admin Dashboard
-                      </>
-                    ) : (
-                      <>
-                        <User className="w-4 h-4" />
-                        Dashboard
-                      </>
-                    )}
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-border" />
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="text-destructive focus:text-destructive cursor-pointer"
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <DropdownMenuSeparator className="bg-border" />
+                  <DropdownMenuItem asChild>
+                    <Link href={dashboardLink} className="flex items-center gap-2 cursor-pointer">
+                      {isAdmin ? (
+                        <>
+                          <ShieldCheck className="w-4 h-4" />
+                          Admin Dashboard
+                        </>
+                      ) : (
+                        <>
+                          <User className="w-4 h-4" />
+                          Dashboard
+                        </>
+                      )}
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-border" />
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="text-destructive focus:text-destructive cursor-pointer"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link href="/auth/login">
+                  <Button variant="ghost" className="text-foreground hover:text-primary">
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/auth/signup">
+                  <Button className="bg-primary text-primary-foreground hover:bg-primary/90">Join Now</Button>
+                </Link>
+              </>
+            )
           ) : (
-            <>
-              <Link href="/auth/login">
-                <Button variant="ghost" className="text-foreground hover:text-primary">
-                  Login
-                </Button>
-              </Link>
-              <Link href="/auth/signup">
-                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">Join Now</Button>
-              </Link>
-            </>
+            <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
           )}
         </div>
 
@@ -150,55 +157,61 @@ export function Navbar() {
                 </Link>
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t border-border">
-                {user ? (
-                  <>
-                    <div className="flex items-center gap-3 pb-3">
-                      <Avatar className="h-10 w-10">
-                        <AvatarImage src={userData?.photoURL || user?.photoURL || ""} />
-                        <AvatarFallback className="bg-primary text-primary-foreground">{initials}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">
-                          {userData?.displayName || user?.displayName || "Member"}
-                        </p>
-                        <p className="text-xs text-muted-foreground">{user.email}</p>
+                {isMounted && !loading ? (
+                  user ? (
+                    <>
+                      <div className="flex items-center gap-3 pb-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src={userData?.photoURL || user?.photoURL || ""} />
+                          <AvatarFallback className="bg-primary text-primary-foreground">{initials}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-sm font-medium text-foreground">
+                            {userData?.displayName || user?.displayName || "Member"}
+                          </p>
+                          <p className="text-xs text-muted-foreground">{user.email}</p>
+                        </div>
                       </div>
-                    </div>
-                    <Link href={dashboardLink} onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full bg-transparent border-border">
-                        {isAdmin ? (
-                          <>
-                            <ShieldCheck className="w-4 h-4 mr-2" />
-                            Admin Dashboard
-                          </>
-                        ) : (
-                          <>
-                            <User className="w-4 h-4 mr-2" />
-                            Dashboard
-                          </>
-                        )}
+                      <Link href={dashboardLink} onClick={() => setIsOpen(false)}>
+                        <Button variant="outline" className="w-full bg-transparent border-border">
+                          {isAdmin ? (
+                            <>
+                              <ShieldCheck className="w-4 h-4 mr-2" />
+                              Admin Dashboard
+                            </>
+                          ) : (
+                            <>
+                              <User className="w-4 h-4 mr-2" />
+                              Dashboard
+                            </>
+                          )}
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        onClick={handleLogout}
+                        className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Log out
                       </Button>
-                    </Link>
-                    <Button
-                      variant="ghost"
-                      onClick={handleLogout}
-                      className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
-                    >
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Log out
-                    </Button>
-                  </>
+                    </>
+                  ) : (
+                    <>
+                      <Link href="/auth/login" onClick={() => setIsOpen(false)}>
+                        <Button variant="outline" className="w-full bg-transparent">
+                          Login
+                        </Button>
+                      </Link>
+                      <Link href="/auth/signup" onClick={() => setIsOpen(false)}>
+                        <Button className="w-full bg-primary text-primary-foreground">Join Now</Button>
+                      </Link>
+                    </>
+                  )
                 ) : (
-                  <>
-                    <Link href="/auth/login" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full bg-transparent">
-                        Login
-                      </Button>
-                    </Link>
-                    <Link href="/auth/signup" onClick={() => setIsOpen(false)}>
-                      <Button className="w-full bg-primary text-primary-foreground">Join Now</Button>
-                    </Link>
-                  </>
+                  <div className="flex justify-center">
+                    <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+                  </div>
                 )}
               </div>
             </div>
