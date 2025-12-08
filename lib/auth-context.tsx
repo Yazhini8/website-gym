@@ -10,7 +10,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth"
-import { doc, setDoc, getDoc } from "firebase/firestore"
+import { doc, setDoc, getDoc, collection, getDocs, query, where } from "firebase/firestore"
 import { auth, db } from "./firebase"
 
 interface UserData {
@@ -32,6 +32,7 @@ interface AuthContextType {
   signUp: (email: string, password: string, name: string) => Promise<void>
   signInWithGoogle: () => Promise<void>
   logout: () => Promise<void>
+  getAllUsers: () => Promise<UserData[]>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -109,6 +110,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUserData(null)
   }
 
+  const getAllUsers = async () => {
+    const usersCollection = collection(db, 'users');
+    const usersSnapshot = await getDocs(usersCollection);
+    const usersList = usersSnapshot.docs.map(doc => doc.data() as UserData);
+    return usersList;
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -119,6 +127,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signUp,
         signInWithGoogle,
         logout,
+        getAllUsers,
       }}
     >
       {children}

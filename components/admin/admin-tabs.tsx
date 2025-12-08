@@ -1,15 +1,23 @@
-"use client"
+'use client'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { TrainersManager } from "@/components/admin/trainers-manager"
 import { ClassesManager } from "@/components/admin/classes-manager"
 import { PricingManager } from "@/components/admin/pricing-manager"
-import { Users, Dumbbell, CreditCard } from "lucide-react"
+import { UsersManager } from "@/components/admin/users-manager"
+import { Users, Dumbbell, CreditCard, User } from "lucide-react"
 
 export function AdminTabs() {
   return (
     <Tabs defaultValue="trainers" className="w-full">
-      <TabsList className="grid w-full grid-cols-3 bg-card border border-border mb-8">
+      <TabsList className="grid w-full grid-cols-4 bg-card border border-border mb-8">
+        <TabsTrigger
+          value="users"
+          className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+        >
+          <User className="w-4 h-4" />
+          <span className="hidden sm:inline">Users</span>
+        </TabsTrigger>
         <TabsTrigger
           value="trainers"
           className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
@@ -32,6 +40,10 @@ export function AdminTabs() {
           <span className="hidden sm:inline">Pricing</span>
         </TabsTrigger>
       </TabsList>
+
+      <TabsContent value="users">
+        <UsersManager />
+      </TabsContent>
 
       <TabsContent value="trainers">
         <TrainersManager />

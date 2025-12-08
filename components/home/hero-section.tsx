@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Play, ArrowRight, X } from "lucide-react"
 
-function VideoPlayer({ videoId, onClose }: { videoId: string; onClose: () => void }) {
+function VideoPlayer({ videoUrl, onClose }: { videoUrl: string; onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
       <div className="relative w-full max-w-4xl">
@@ -18,13 +18,12 @@ function VideoPlayer({ videoId, onClose }: { videoId: string; onClose: () => voi
           <X className="w-8 h-8" />
         </Button>
         <div className="aspect-w-16 aspect-h-9">
-          <iframe
-            src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
+          <video
+            src={videoUrl}
+            controls
+            autoPlay
             className="w-full h-full"
-          ></iframe>
+          ></video>
         </div>
       </div>
     </div>
@@ -104,7 +103,7 @@ export function HeroSection() {
           </div>
         </div>
       </section>
-      {isVideoPlaying && <VideoPlayer videoId="yC8p_OD-3oI" onClose={handleCloseVideo} />}
+      {isVideoPlaying && <VideoPlayer videoUrl="https://res.cloudinary.com/dry3pzan6/video/upload/v1764907036/j40xqwzkokx0eqjzaspn.mp4" onClose={handleCloseVideo} />}
     </>
   )
 }
